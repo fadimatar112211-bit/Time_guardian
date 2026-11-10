@@ -1,12 +1,16 @@
 {
-  "background_color": "#ffffff",
-  "dir": "ltr",
-  "display": "standalone",
   "name": "Time Guardian",
-  "orientation": "any",
-  "scope": "/",
-  "short_name": "Time Guardian",
+  "short_name": "TimeGuardian",
   "start_url": "/",
-  "theme_color": "#ffffff",
-  "description": "Time management and location tracking app"
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#000000",
+  "description": "Time management and location tracking app",
+  "icons": [
+    {
+      "src": "https://via.placeholder.com/512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
 }
