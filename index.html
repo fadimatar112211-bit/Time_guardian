@@ -27,7 +27,7 @@
         }
 
         .container { max-width: 900px; margin: 0 auto; padding: 12px; }
-        .screen { display: none; }
+        .screen { display: none !important; }
         .screen.active { display: block !important; }
 
         .login-card {
@@ -53,17 +53,29 @@
             text-align: center;
         }
 
-        button {
+        .main-btn {
             background: var(--accent);
             color: white;
             border: none;
-            padding: 12px 20px;
+            padding: 14px 20px;
             border-radius: 8px;
             cursor: pointer;
-            font-size: 15px;
+            font-size: 16px;
             font-weight: bold;
             width: 100%;
             margin-top: 10px;
+        }
+
+        .quick-btn {
+            background: #34495e;
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: bold;
+            width: 32%;
         }
 
         .header-bar {
@@ -175,16 +187,15 @@
             <h2>⚔️ فرسان الزمن</h2>
             <p style="color:#8a8cb0; font-size:13px;">دير سمعان العمودي - حلب</p>
             <hr style="border-color:#2a2c4e; margin:20px 0;">
-            <label style="font-size:13px; display:block; color:#ccc;">أدخل كلمة السر أو اختر دخول سريع:</label>
+            <label style="font-size:13px; display:block; color:#ccc; margin-bottom:5px;">أدخل كلمة السر أو اضغط دخول سريع:</label>
             
-            <!-- تم إضافة onkeydown لتسجيل الدخول فور الضغط على Enter من الموبايل -->
-            <input type="text" id="passkey-input" placeholder="اكتب team1 أو admin123" onkeydown="checkEnter(event)">
-            <button onclick="login()">دخول الواجهة</button>
+            <input type="text" id="passkey-input" placeholder="admin123 أو team1">
+            <button class="main-btn" onclick="tryLogin()">دخول الواجهة</button>
 
-            <div style="margin-top:15px; display:flex; gap:5px;">
-                <button onclick="quickLogin('admin123')" style="background:#34495e; font-size:11px; padding:8px;">إدارة</button>
-                <button onclick="quickLogin('center123')" style="background:#34495e; font-size:11px; padding:8px;">مركز</button>
-                <button onclick="quickLogin('team1')" style="background:#27ae60; font-size:11px; padding:8px;">فريق 1</button>
+            <div style="margin-top:15px; display:flex; justify-content:space-between;">
+                <button class="quick-btn" onclick="forceOpen('admin')">إدارة</button>
+                <button class="quick-btn" onclick="forceOpen('center')">مركز</button>
+                <button class="quick-btn" onclick="forceOpen('team')" style="background:#27ae60;">فريق 1</button>
             </div>
         </div>
     </div>
@@ -193,11 +204,11 @@
     <div id="admin-screen" class="screen">
         <div class="header-bar">
             <h3>لوحة الإدارة 🛠️</h3>
-            <button onclick="logout()" style="width:auto; padding:5px 12px;">خروج</button>
+            <button onclick="goHome()" style="width:auto; padding:5px 12px; background:#e74c3c; border:none; color:#fff; border-radius:6px;">خروج</button>
         </div>
         <div style="background:var(--card-bg); padding:15px; border-radius:10px;">
             <p><strong>المؤقت:</strong> <span style="color:var(--gold);">120:00</span> دقيقة</p>
-            <button onclick="alert('تم تفعيل التسكير!')" style="background:var(--locked-orange);">تفعيل نافذة المنتصف (تسكير الصور)</button>
+            <button class="main-btn" onclick="alert('تم تفعيل التسكير!')" style="background:var(--locked-orange);">تفعيل نافذة المنتصف (تسكير الصور)</button>
         </div>
     </div>
 
@@ -205,12 +216,12 @@
     <div id="center-screen" class="screen">
         <div class="header-bar">
             <h3>إدارة المركز 🏰</h3>
-            <button onclick="logout()" style="width:auto; padding:5px 12px;">خروج</button>
+            <button onclick="goHome()" style="width:auto; padding:5px 12px; background:#e74c3c; border:none; color:#fff; border-radius:6px;">خروج</button>
         </div>
         <div style="background:var(--card-bg); padding:15px; border-radius:10px;">
             <h4>تسجيل فوز فريق</h4>
-            <select><option>فريق 1</option><option>فريق 2</option></select>
-            <button onclick="alert('تم إصدار الكود بنجاح!')">إصدار الكود للفريق</button>
+            <select style="width:100%; padding:10px; background:#21233d; color:#fff; border-radius:6px; margin:10px 0;"><option>فريق 1</option><option>فريق 2</option></select>
+            <button class="main-btn" onclick="alert('تم إصدار الكود بنجاح!')">إصدار الكود للفريق</button>
         </div>
     </div>
 
@@ -254,16 +265,16 @@
 
         <div class="section-title">أحداث دير سمعان العشرة (بطاقات الحقيقة)</div>
         <div class="grid-10">
-            <div class="event-card" id="ev-1"><h5>1. رحيل الأثر</h5><p>بارود</p><button onclick="submitCode(1)" style="font-size:10px; padding:4px;">كود</button></div>
-            <div class="event-card" id="ev-2"><h5>2. حفريات</h5><p>أدوية</p><button onclick="submitCode(2)" style="font-size:10px; padding:4px;">كود</button></div>
-            <div class="event-card" id="ev-3"><h5>3. الحصن</h5><p>إنترنت</p><button onclick="submitCode(3)" style="font-size:10px; padding:4px;">كود</button></div>
-            <div class="event-card" id="ev-4"><h5>4. ثكنة</h5><p>عدّة</p><button onclick="submitCode(4)" style="font-size:10px; padding:4px;">كود</button></div>
-            <div class="event-card" id="ev-5"><h5>5. تبرعات</h5><p>حيل</p><button onclick="submitCode(5)" style="font-size:10px; padding:4px;">كود</button></div>
-            <div class="event-card" id="ev-6"><h5>6. دمار</h5><p>أختام</p><button onclick="submitCode(6)" style="font-size:10px; padding:4px;">كود</button></div>
-            <div class="event-card" id="ev-7"><h5>7. ازدهار</h5><p>خريطة</p><button onclick="submitCode(7)" style="font-size:10px; padding:4px;">كود</button></div>
-            <div class="event-card" id="ev-8"><h5>8. ترميم</h5><p>مؤن</p><button onclick="submitCode(8)" style="font-size:10px; padding:4px;">كود</button></div>
-            <div class="event-card" id="ev-9"><h5>9. مسار</h5><p>منظار</p><button onclick="submitCode(9)" style="font-size:10px; padding:4px;">كود</button></div>
-            <div class="event-card" id="ev-10"><h5>10. طبيعة</h5><p>ذهب</p><button onclick="submitCode(10)" style="font-size:10px; padding:4px;">كود</button></div>
+            <div class="event-card" id="ev-1"><h5>1. رحيل الأثر</h5><p>بارود</p><button onclick="submitCode(1)" style="font-size:10px; padding:4px; width:100%; background:#e74c3c; border:none; color:#fff; border-radius:4px;">كود</button></div>
+            <div class="event-card" id="ev-2"><h5>2. حفريات</h5><p>أدوية</p><button onclick="submitCode(2)" style="font-size:10px; padding:4px; width:100%; background:#e74c3c; border:none; color:#fff; border-radius:4px;">كود</button></div>
+            <div class="event-card" id="ev-3"><h5>3. الحصن</h5><p>إنترنت</p><button onclick="submitCode(3)" style="font-size:10px; padding:4px; width:100%; background:#e74c3c; border:none; color:#fff; border-radius:4px;">كود</button></div>
+            <div class="event-card" id="ev-4"><h5>4. ثكنة</h5><p>عدّة</p><button onclick="submitCode(4)" style="font-size:10px; padding:4px; width:100%; background:#e74c3c; border:none; color:#fff; border-radius:4px;">كود</button></div>
+            <div class="event-card" id="ev-5"><h5>5. تبرعات</h5><p>حيل</p><button onclick="submitCode(5)" style="font-size:10px; padding:4px; width:100%; background:#e74c3c; border:none; color:#fff; border-radius:4px;">كود</button></div>
+            <div class="event-card" id="ev-6"><h5>6. دمار</h5><p>أختام</p><button onclick="submitCode(6)" style="font-size:10px; padding:4px; width:100%; background:#e74c3c; border:none; color:#fff; border-radius:4px;">كود</button></div>
+            <div class="event-card" id="ev-7"><h5>7. ازدهار</h5><p>خريطة</p><button onclick="submitCode(7)" style="font-size:10px; padding:4px; width:100%; background:#e74c3c; border:none; color:#fff; border-radius:4px;">كود</button></div>
+            <div class="event-card" id="ev-8"><h5>8. ترميم</h5><p>مؤن</p><button onclick="submitCode(8)" style="font-size:10px; padding:4px; width:100%; background:#e74c3c; border:none; color:#fff; border-radius:4px;">كود</button></div>
+            <div class="event-card" id="ev-9"><h5>9. مسار</h5><p>منظار</p><button onclick="submitCode(9)" style="font-size:10px; padding:4px; width:100%; background:#e74c3c; border:none; color:#fff; border-radius:4px;">كود</button></div>
+            <div class="event-card" id="ev-10"><h5>10. طبيعة</h5><p>ذهب</p><button onclick="submitCode(10)" style="font-size:10px; padding:4px; width:100%; background:#e74c3c; border:none; color:#fff; border-radius:4px;">كود</button></div>
         </div>
 
         <div class="section-title">أدوار الفريق العشرة</div>
@@ -280,53 +291,62 @@
             <button class="role-btn">المؤرخ</button>
         </div>
 
-        <button onclick="logout()" style="background:#444; margin-bottom:20px;">خروج</button>
+        <button class="main-btn" onclick="goHome()" style="background:#555; margin-bottom:20px;">تسجيل الخروج</button>
     </div>
 
 </div>
 
 <script>
-    function login() {
-        let val = document.getElementById('passkey-input').value.trim().toLowerCase();
+    function hideAll() {
+        var screens = document.querySelectorAll('.screen');
+        for (var i = 0; i < screens.length; i++) {
+            screens[i].classList.remove('active');
+        }
+    }
+
+    function showScreen(id) {
+        hideAll();
+        var target = document.getElementById(id);
+        if (target) {
+            target.classList.add('active');
+        }
+    }
+
+    function tryLogin() {
+        var val = document.getElementById('passkey-input').value.trim().toLowerCase();
         if (val === 'admin123') {
             showScreen('admin-screen');
         } else if (val === 'center123') {
             showScreen('center-screen');
         } else if (val !== '') {
-            showScreen('team-screen');
             document.getElementById('display-team-name').innerText = "فريق " + val.replace('team', '');
+            showScreen('team-screen');
         } else {
-            alert('الرجاء إدخال كلمة المرور أو اختيار زر سريع بالأسفل!');
+            // افتراضي في حال لم يتم كتابة شيء، يفتح الفريق الأول لتسهيل التجربة
+            showScreen('team-screen');
         }
     }
 
-    function checkEnter(event) {
-        if (event.key === 'Enter') {
-            login();
+    function forceOpen(type) {
+        if (type === 'admin') {
+            showScreen('admin-screen');
+        } else if (type === 'center') {
+            showScreen('center-screen');
+        } else {
+            showScreen('team-screen');
         }
     }
 
-    function quickLogin(key) {
-        document.getElementById('passkey-input').value = key;
-        login();
-    }
-
-    function showScreen(id) {
-        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-        let target = document.getElementById(id);
-        if (target) target.classList.add('active');
-    }
-
-    function logout() {
+    function goHome() {
         document.getElementById('passkey-input').value = '';
         showScreen('login-screen');
     }
 
     function submitCode(id) {
-        let code = prompt("أدخل كود الحدث " + id + ":");
+        var code = prompt("أدخل كود الحدث " + id + ":");
         if (code) {
             alert("تم إزالة الصورة وتثبيت بطاقة الحقيقة!");
-            let el = document.getElementById('ev-' + id);
+            var el = document.getElementById('ev-' + id);
             if (el) el.classList.add('cleared');
         }
     }
