@@ -1,16 +1,20 @@
 {
-  "name": "Time Guardian",
-  "short_name": "TimeGuardian",
+  "name": "فرسان الزمن",
+  "short_name": "فرسان الزمن",
+  "description": "لعبة ميدانية لعشر فرق تحمي دير سمعان من عشرة أحداث بديلة.",
+  "lang": "ar",
+  "dir": "rtl",
+  "id": "./",
   "start_url": "./index.html",
+  "scope": "./",
   "display": "standalone",
-  "background_color": "#ffffff",
-  "theme_color": "#000000",
-  "description": "Time management and location tracking app",
+  "orientation": "portrait",
+  "background_color": "#12141c",
+  "theme_color": "#12141c",
+  "categories": ["games", "education"],
   "icons": [
-    {
-      "src": "https://via.placeholder.com/512.png",
-      "sizes": "512x512",
-      "type": "image/png"
-    }
+    { "src": "img/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "img/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "img/icon-512-maskable.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
   ]
 }
