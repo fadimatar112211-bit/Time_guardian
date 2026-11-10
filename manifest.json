@@ -1,0 +1,12 @@
+{
+  "background_color": "#ffffff",
+  "dir": "ltr",
+  "display": "standalone",
+  "name": "Time Guardian",
+  "orientation": "any",
+  "scope": "/",
+  "short_name": "Time Guardian",
+  "start_url": "/",
+  "theme_color": "#ffffff",
+  "description": "Time management and location tracking app"
+}
