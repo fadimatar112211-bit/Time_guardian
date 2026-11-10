@@ -1,14 +1,307 @@
 <!DOCTYPE html>
-<html lang="ar">
+<html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Time Guardian</title>
-    <!-- السطر التالي هو المسؤول عن ربط ملف الـ Manifest بشكل صحيح -->
-    <link rel="manifest" href="./manifest.json">
+    <title>فرسان الزمن - دير سمعان</title>
+    <link rel="manifest" href="manifest.json">
+    <style>
+        :root {
+            --bg-color: #1a1a2e;
+            --card-bg: #16213e;
+            --accent: #e94560;
+            --gold: #f39c12;
+            --text-light: #ffffff;
+            --success: #2ecc71;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-light);
+            direction: rtl;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 15px;
+        }
+
+        /* Screen Management */
+        .screen { display: none; }
+        .screen.active { display: block; }
+
+        /* Login Screen */
+        .login-box {
+            background: var(--card-bg);
+            padding: 25px;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+            margin-top: 40px;
+        }
+
+        input[type="password"], input[type="text"], select {
+            width: 90%;
+            padding: 12px;
+            margin: 10px 0;
+            border-radius: 6px;
+            border: 1px solid #0f3460;
+            background: #0f3460;
+            color: #fff;
+            font-size: 16px;
+        }
+
+        button {
+            background: var(--accent);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            margin-top: 10px;
+            width: 95%;
+        }
+
+        button:active { opacity: 0.8; }
+
+        /* Header & Dashboard */
+        .header-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--card-bg);
+            padding: 10px 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+
+        .gold-badge {
+            background: var(--gold);
+            color: #000;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-weight: bold;
+        }
+
+        /* Monasteries Grid / Images */
+        .monastery-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .image-card {
+            background: #0f3460;
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+            border: 2px solid transparent;
+            position: relative;
+        }
+
+        .image-card.cleared {
+            border-color: var(--success);
+            background: #1e5128;
+        }
+
+        /* Resources & Roles */
+        .section-title {
+            border-bottom: 2px solid var(--accent);
+            padding-bottom: 5px;
+            margin-top: 20px;
+        }
+
+        .roles-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px;
+        }
+
+        .role-btn {
+            background: #0f3460;
+            font-size: 13px;
+            padding: 8px;
+            text-align: right;
+        }
+
+        .role-btn.dead {
+            background: #5c0e18;
+            text-decoration: line-through;
+        }
+
+        .alert-box {
+            background: #c0392b;
+            color: white;
+            padding: 10px;
+            border-radius: 6px;
+            margin-bottom: 10px;
+            display: none;
+        }
+    </style>
 </head>
 <body>
-    <h1>Time Guardian App</h1>
-    <p>مرحباً بك في تطبيقك!</p>
+
+<div class="container">
+
+    <!-- 1. SHIELD LOGIN SCREEN -->
+    <div id="login-screen" class="screen active">
+        <div class="login-box">
+            <h2>فرسان الزمن ⚔️</h2>
+            <p>دير سمعان العمودي - J.E.C</p>
+            <hr style="border-color:#0f3460;">
+            <label>أدخل كلمة السر الخاصة بك:</label>
+            <input type="password" id="passkey" placeholder="كلمة المرور...">
+            <button onclick="handleLogin()">دخول Lᴏɢɪɴ</button>
+            <p style="font-size:12px; color:#aaa; margin-top:15px;">
+                * أدخل رمز الإدارة، رمز المركز، أو رمز الفريق للوصول لستار اللعبة.
+            </p>
+        </div>
+    </div>
+
+    <!-- 2. ADMIN DASHBOARD -->
+    <div id="admin-screen" class="screen">
+        <div class="header-bar">
+            <h3>لوحة الإدارة 🛠️</h3>
+            <button onclick="logout()" style="width:auto; padding:5px 10px;">خروج</button>
+        </div>
+        <div style="background:var(--card-bg); padding:15px; border-radius:8px;">
+            <h4>المؤقت والتحكم العام</h4>
+            <p>الوقت المتبقي: <span id="admin-timer">120:00</span></p>
+            <button onclick="alert('تم إيقاف/تشغيل اللعبة')">إيقاف / تشغيل مؤقت</button>
+            <button onclick="alert('تم تفعيل نافذة منتصف اللعبة')" style="background:#e67e22; margin-top:5px;">تفعيل نافذة المنتصف (تسكير الصورة)</button>
+
+            <h4 class="section-title">إدارات سريعة</h4>
+            <label>اختر الفريق:</label>
+            <select id="admin-team-select">
+                <option value="1">فريق 1</option>
+                <option value="2">فريق 2</option>
+                <option value="3">فريق 3</option>
+            </select>
+            <button onclick="alert('تم إضافة 10 ذهب للفريق')" style="background:var(--gold); color:#000;">إضافة 10 ذهب 🪙</button>
+        </div>
+    </div>
+
+    <!-- 3. CENTER MANAGER SCREEN -->
+    <div id="center-screen" class="screen">
+        <div class="header-bar">
+            <h3>مسؤول المركز الميداني 🏰</h3>
+            <button onclick="logout()" style="width:auto; padding:5px 10px;">خروج</button>
+        </div>
+        <div style="background:var(--card-bg); padding:15px; border-radius:8px;">
+            <h4>تسجيل نتيجة فريق</h4>
+            <label>الفريق المنافس:</label>
+            <select>
+                <option>فريق 1</option><option>فريق 2</option><option>فريق 3</option>
+            </select>
+            <label>السكور المحقق:</label>
+            <input type="text" placeholder="النقاط...">
+            <button onclick="alert('تم إعطاء الكود للفريق وتحديث النتيجة!')">تأكيد الفوز وإصدار الكود</button>
+        </div>
+    </div>
+
+    <!-- 4. TEAM DASHBOARD (MAIN GAME) -->
+    <div id="team-screen" class="screen">
+        <div class="header-bar">
+            <div>
+                <strong id="team-name">فريق فرسان الزمن</strong>
+                <div style="font-size:12px; color:#aaa;">دير سمعان - حلب</div>
+            </div>
+            <div class="gold-badge">الذهب: <span id="gold-count">40</span> 🪙</div>
+        </div>
+
+        <div id="alert-box" class="alert-box">تنبيه: قُتل عضو في الفريق! استخدم المسعف لإحيائه.</div>
+
+        <!-- монастыر / Images -->
+        <h4 class="section-title">أحداث دير سمعان العشرة</h4>
+        <div class="monastery-grid">
+            <div class="image-card" id="img-1">
+                <h5>1. رحيل الأثر</h5>
+                <p style="font-size:11px;">قباب مهجورة وقوس وحيد</p>
+                <button onclick="enterCode(1)" style="font-size:12px; padding:5px;">إدخال الكود</button>
+            </div>
+            <div class="image-card" id="img-2">
+                <h5>2. حفريات ونهب</h5>
+                <p style="font-size:11px;">حفرة مكان الدير</p>
+                <button onclick="enterCode(2)" style="font-size:12px; padding:5px;">إدخال الكود</button>
+            </div>
+            <div class="image-card" id="img-3">
+                <h5>3. الحصن الدائم</h5>
+                <p style="font-size:11px;">الدير قلعة حربية</p>
+                <button onclick="enterCode(3)" style="font-size:12px; padding:5px;">إدخال الكود</button>
+            </div>
+            <div class="image-card" id="img-4">
+                <h5>4. الثكنة العسكرية</h5>
+                <p style="font-size:11px;">تحول إلى ثكنة</p>
+                <button onclick="enterCode(4)" style="font-size:12px; padding:5px;">إدخال الكود</button>
+            </div>
+        </div>
+
+        <!-- Roles Grid -->
+        <h4 class="section-title">أدوار الفريق العشرة</h4>
+        <div class="roles-grid">
+            <button class="role-btn">مفكك الشفرات (أختام: 0)</button>
+            <button class="role-btn">أمين الطاقة (ذهب: 40)</button>
+            <button class="role-btn">المهاجم الزمني (بارود: 0)</button>
+            <button class="role-btn">مهندس المراسي (عدّة: 0)</button>
+            <button class="role-btn">المدافع الزمني (مؤن: 0)</button>
+            <button class="role-btn">المسعف (أدوية: 0)</button>
+            <button class="role-btn">المخادع (حيل: 0)</button>
+            <button class="role-btn">الجاسوس الزمني (إنترنت: 0)</button>
+            <button class="role-btn">المستكشف (منظار: 0)</button>
+            <button class="role-btn">المؤرخ (قطع خريطة: 0)</button>
+        </div>
+
+        <button onclick="logout()" style="background:#555; margin-top:20px;">تسجيل الخروج</button>
+    </div>
+
+</div>
+
+<script>
+    // System Keys setup
+    const PASSKEYS = {
+        'admin123': 'admin-screen',
+        'center123': 'center-screen',
+        'team1': 'team-screen',
+        'team2': 'team-screen'
+    };
+
+    function handleLogin() {
+        const input = document.getElementById('passkey').value.trim();
+        if (PASSKEYS[input]) {
+            showScreen(PASSKEYS[input]);
+            if (input.startsWith('team')) {
+                document.getElementById('team-name').innerText = "فريق " + input.replace('team', '');
+            }
+        } else {
+            alert('كلمة المرور غير صحيحة! جرب (admin123 أو center123 أو team1)');
+        }
+    }
+
+    function showScreen(screenId) {
+        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+        document.getElementById(screenId).classList.add('active');
+    }
+
+    function logout() {
+        document.getElementById('passkey').value = '';
+        showScreen('login-screen');
+    }
+
+    function enterCode(imgNum) {
+        let code = prompt("أدخل كود مفكك الشفرات الخاص بالحدث " + imgNum + ":");
+        if(code) {
+            alert("تم إزالة الصورة بنجاح وتأكيد بطاقة الحقيقة!");
+            document.getElementById('img-' + imgNum).classList.add('cleared');
+        }
+    }
+</script>
+
 </body>
 </html>
